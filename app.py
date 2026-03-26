@@ -1,14 +1,21 @@
 from flask import Flask, render_template, request
 import sqlite3
+import os
 
 app = Flask(__name__)
 
+# ✅ Fix database path for Render
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "database.db")
+
+
 def init_db():
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect(db_path)
     conn.execute(
         "CREATE TABLE IF NOT EXISTS contacts (name TEXT, email TEXT, message TEXT)"
     )
     conn.close()
+
 
 init_db()
 
@@ -24,7 +31,7 @@ def submit():
     email = request.form["email"]
     message = request.form["message"]
 
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect(db_path)
     conn.execute(
         "INSERT INTO contacts VALUES (?, ?, ?)",
         (name, email, message),
@@ -35,8 +42,6 @@ def submit():
     return "Data Saved"
 
 
-import os
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT",10000))
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
