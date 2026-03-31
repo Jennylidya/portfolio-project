@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
@@ -39,7 +39,7 @@ def submit():
     conn.commit()
     conn.close()
 
-    return "Data Saved"
+    return redirect(url_for('view_data'))
 
 @app.route("/data")
 def view_data():
