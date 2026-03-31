@@ -41,6 +41,16 @@ def submit():
 
     return "Data Saved"
 
+@app.route("/data")
+def view_data():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM contacts")
+    data = cursor.fetchall()
+    conn.close()
+
+    return render_template("data.html", data=data)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
